@@ -31,7 +31,18 @@ const functions = {
         return (obj);
     },
 
-    paginationString(sql, connection, where) {
+    extractDbConn(dataConn){
+        let dbpgsql= {
+            user: dataConn.db_user,
+            password: dataConn.db_password,
+            host: dataConn.db_host,
+            database: dataConn.db_name,
+            port: dataConn.db_port,
+        };
+        return dbpgsql;
+    },
+
+    paginationString(sql, where) {
         //Se agrega en esta función el orderby
         const orderby = where.orderby || 'N';
         const pags = where.pags || 'N';
@@ -44,12 +55,8 @@ const functions = {
             const offset = Number(where.offset || 0);
             const numrows = Number(where.numrows || 10);
             
-            if (connection.oracleServerVersion >= 1201000000) { //Para versiones mayores a 12.01
-                sql += ` OFFSET ${offset} ROWS FETCH NEXT ${numrows} ROWS ONLY`;
-            } else {
-                sql = `SELECT * FROM (SELECT A.*, ROWNUM AS MY_RNUM FROM ( ${sql} ) A 
+            sql = `SELECT * FROM (SELECT A.*, ROWNUM AS MY_RNUM FROM ( ${sql} ) A 
                         WHERE ROWNUM <= ${numrows} + ${offset}) WHERE MY_RNUM > ${offset}`;
-            }
         }
         return sql;
     }
