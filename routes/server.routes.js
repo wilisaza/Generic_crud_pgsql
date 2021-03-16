@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 
-const {getAllObjects, getOneObject, postOneObject, putObjects, deleteObjects, getFunctionObject, postAllCustomObjects, getProcedureObject} = require('../controllers/orcl.controller');
+const {getAllObjects, getOneObject, postOneObject, putObjects, deleteObjects, getFunctionObject, postAllCustomObjects, getProcedureObject} = require('../controllers/pgsql.controller');
 
 router.get('/', function (req, res) {res.send('Hello World')});
 
